@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var cart = require('./funcCart');
 var db = require('../db_module/module')
 
 function generateTId() {
@@ -49,7 +48,7 @@ router.get('/createTId', async (req, res) =>{
     if (!req.cookies.tId){
         const tId = await getGenerateTId();
         console.log(`get ${tId}`);
-    
+        
         res.cookie('tId', tId, {
             maxAge: 60 * 1000 * 15, // 15 分鐘有效期
             signed: false,
@@ -78,9 +77,13 @@ router.get('/createTId', async (req, res) =>{
     }
 })
 
+
 router.get("/checkCookie", (req, res) =>{
     console.log("\ncheck:", req.cookies.tId);
     res.send({result: req.cookies.tId});
 })
+
+
+
 
 module.exports = router;

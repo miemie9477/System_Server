@@ -6,7 +6,9 @@
 * cookie-parser
 
 # MEMO(For mie)
-* 還是要解決middleware在沒有cookie的時候要呼叫createTId的問題
+* 查看cart要檢查cookie
+* 查看訂單看能不能顯示24小時內的訂單
+* 後台做驗證
 
 ## Console
 > SET DEBUG=director name:index & npm run devstart

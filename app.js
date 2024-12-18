@@ -2,6 +2,7 @@ var express = require('express');
 const cors = require('cors');
 var app = express();
 var cookieParser = require('cookie-parser');
+var db =require("./db_module/module")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -11,6 +12,7 @@ app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true
 }));
+
 
 app.use(async(req, res, next) => {
   console.log("\n===middleware===");
@@ -34,12 +36,14 @@ app.use(async(req, res, next) => {
 var setCookie = require('./routes/SetCookie');
 var cart = require('./routes/funcCart');
 var menu = require('./routes/funcMenu');
-var good = require('./routes/funcGood');
+var backend = require('./routes/funcBackend');
+var act = require('./routes/funcBackendBtn');
+
 app.use('/setCookie', setCookie);
 app.use('/cart', cart);
 app.use('/menu', menu);
-app.use('/good', good);
-
+app.use('/backend', backend);
+app.use('/act', act);
 
 // env or 3001 as port
 const port = process.env.PORT || 3001;

@@ -46,35 +46,18 @@ router.post("/modifyAmount", async (req, res) =>{
     const pNo = req.body.pNo;
     const amount = req.body.amount;
     const cTotal = req.body.cTotal;
-    const cSpicy = req.body.cSpicy;
-    var sql = "SELECT unitPrice FROM 00product WHERE pNo=?"
-    await db.connection.query(sql, [pNo],
+    sql = "UPDATE `00cartdetail` SET `amount`='?',`salePrice`='?' WHERE tId=? AND pNo=?"
+    db.connection.query(sql, [amount, cTotal, tId, pNo],
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send({result: "Error", data, error});
+                res.status(500).send(error);
             }
             else{
-                console.log("unitPrice", data[0].unitPrice)
-                salePrice = parseInt(data[0].unitPrice, 10) * amount;
-                console.log("salePrice:", salePrice);
-                
-                sql = "UPDATE `00cartdetail` SET `amount`='?',`salePrice`='?' WHERE tId=? AND pNo=?"
-                db.connection.query(sql, [amount, salePrice, tId, pNo],
-                    (error, data) =>{
-                        if(error){
-                            console.log(error);
-                            res.status(500).send(error);
-                        }
-                        else{
-                            res.send({result: "success", data});
-                        }
-                    }
-                )
+                res.send({result: "success", data});
             }
         }
     )
-    
 })
 
 router.post("/discard", (req, res) =>{
@@ -91,6 +74,10 @@ router.post("/discard", (req, res) =>{
             res.send(data);
         }
     })
-})  
+}) 
+
+router.post("/sendTrans", (req, res) =>{
+    
+})
 
 module.exports = router;
