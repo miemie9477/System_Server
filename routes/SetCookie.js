@@ -43,6 +43,7 @@ async function getGenerateTId(){
     } 
 }
 
+
 router.get('/createTId', async (req, res) =>{
     console.log("\n===Setting Cookie===")
     if (!req.cookies.tId){
@@ -53,11 +54,12 @@ router.get('/createTId', async (req, res) =>{
             maxAge: 60 * 1000 * 15, // 15 分鐘有效期
             signed: false,
         });
-        const now = new Date();
-        const isoString = now.toISOString(); // 格式: 2024-11-28T08:25:32.123Z
-        const formattedTime = isoString.replace(/T/, ' ').replace(/\.\d+Z$/, '');
+        const now = new Date(); // 當前 UTC 時間
+        const taiwanTime = new Date(now.getTime() + 8 * 60 * 60 * 1000); // 加上 8 小時
+        const isoString = taiwanTime.toISOString(); // 格式: 2024-11-28T08:25:32.123Z
+        const tTime = isoString.replace(/T/, ' ').replace(/\.\d+Z$/, '');
         const query = 'INSERT INTO `cart`(`tId`, `cTime`) VALUES (?, ?)'
-        db.connection.query(query, [tId, formattedTime], (error, data) =>{
+        db.connection.query(query, [tId, tTime], (error, data) =>{
             console.log(data);
             if(error){
                 console.log(error);

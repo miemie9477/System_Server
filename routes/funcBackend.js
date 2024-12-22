@@ -17,6 +17,53 @@ router.get("/member", (req, res) =>{
     })
 })
 
+router.post("/insertMember", (req, res)=>{
+    const account = req.body.account;
+    const pwd = req.body.pwd;
+    const sql = "INSERT INTO `member`(`account`, `pwd`) VALUES (?,?)"
+    db.connection.query(sql, [account, pwd], (err, data) => {
+        if (err) {
+            console.error('Error:', err);
+            return;
+        }
+        else{
+            console.log("login:", data);
+            res.send(data);
+        }
+    });
+})
+
+router.post("/modifyMember", (req, res) =>{
+    const account = req.body.account;
+    const pwd = req.body.pwd;
+    const sql = "UPDATE `member` SET `account`=?,`pwd`=? WHERE `account`=?"
+    db.connection.query(sql, [account, pwd, account], (err, data) => {
+        if (err) {
+            console.error('Error:', err);
+            return;
+        }
+        else{
+            console.log("login:", data);
+            res.send(data);
+        }
+    });
+})
+
+router.post("/deleteMember", (req, res) =>{
+    const account = req.body.account;
+    const sql = "DELETE FROM `member` WHERE account=?"
+    db.connection.query(sql, [account], (err, data) => {
+        if (err) {
+            console.error('Error:', err);
+            return;
+        }
+        else{
+            console.log("login:", data);
+            res.send(data);
+        }
+    });
+})
+
 router.post("/login", (req, res) =>{
     const account = req.body.account;
     const password = req.body.pwd;
