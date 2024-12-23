@@ -169,7 +169,7 @@ router.post("/sendRecord", (req, res) =>{
         record.pName || null,   // 商品名稱
         record.amount || null,  // 數量
         record.cTotal || null,  // 總價
-        record.cSpicy || null   // 辣度
+        record.cSpicy || 0   // 辣度
     ]);
     
     const sql = "INSERT INTO record ( `rId`, `pNo`, `pName`, `rAmount`, `rTotal`, `rSpicy`) VALUES ?"
