@@ -83,7 +83,7 @@ router.post("/login", (req, res) =>{
 
 
 router.get("/allTrans", (req, res) =>{
-    const sql = "SELECT * FROM `transaction` WHERE 1;"
+    const sql = "SELECT * FROM `transaction` WHERE 1 ORDER BY `tTime` DESC;"
     db.connection.query(sql, (error, data) =>{
         if(error){
             console.log(error);
@@ -110,7 +110,7 @@ router.get("/allTransDetail", (req, res) =>{
 })
 
 router.get("/checkPay", (req, res)=>{
-    const sql = "SELECT * FROM `transaction` WHERE `payState` = 0;"
+    const sql = "SELECT * FROM `transaction` WHERE `payState` = 0 ORDER BY `tTime` DESC;"
     db.connection.query(sql, (error, data) =>{
         if(error){
             console.log(error);
@@ -138,7 +138,7 @@ router.get("/checkPayDetail", (req, res) =>{
 })
 
 router.get("/ready", (req, res) =>{
-    const sql = "SELECT * FROM `transaction` WHERE `payState`=1 AND `tState`=0;"
+    const sql = "SELECT * FROM `transaction` WHERE `payState`=1 AND `tState`=0 ORDER BY `tTime` DESC;"
     db.connection.query(sql, (error, data) =>{
         if(error){
             console.log(error);
@@ -166,7 +166,7 @@ router.get("/readyDetail", (req, res) =>{
 })
 
 router.get("/done", (req, res) =>{
-    const sql = "SELECT * FROM `transaction`  WHERE `payState`= 1 AND `tState`=1;"
+    const sql = "SELECT * FROM `transaction`  WHERE `payState`= 1 AND `tState`=1 ORDER BY `tTime` DESC;"
     db.connection.query(sql, (error, data) =>{
         if(error){
             console.log(error);

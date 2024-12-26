@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 
 router.post("/addCart", (req, res) =>{
     var info={
-        tId: req.cookies.tId,
+        tId: req.body.tId,
         pNo: req.body.pNo,
         pName: req.body.pName,
         amount:req.body.amount,
@@ -26,25 +26,27 @@ router.post("/addCart", (req, res) =>{
     })
 })
 
-router.get("/checkCart", (req, res) =>{
-      const tId = req.cookies.tId;
-      console.log(`tId: ${tId}`);
-      const sql = "SELECT * FROM `cartdetail` WHERE `tId`=?"
-      db.connection.query(sql, [tId], (error, data) =>{
-            if(error){
-                console.log(error);
-                res.status(500).send({result: "Error", data, error});
-            }
-            else{
-                console.log(data);
-                res.send(data);
-            }
-      })
+router.post("/checkCart", (req, res) =>{
+    console.log("req:", req.body);
+    
+    const tId = req.body.tId;
+    console.log(`tId: ${tId}`);
+    const sql = "SELECT * FROM `cartdetail` WHERE `tId`=?"
+    db.connection.query(sql, [tId], (error, data) =>{
+        if(error){
+            console.log(error);
+            res.status(500).send({result: "Error", data, error});
+        }
+        else{
+            console.log(data);
+            res.send(data);
+        }
+    })
 })      
 
 router.post("/modifyAmount", async (req, res) =>{
     console.log("req:", req.body);
-    const tId = req.cookies.tId;
+    const tId = req.body.info.tId;
     const pNo = req.body.info.pNo;
     const amount = req.body.info.amount;
     const cTotal = req.body.info.cTotal;
@@ -64,8 +66,8 @@ router.post("/modifyAmount", async (req, res) =>{
 
 router.post("/discard", (req, res) =>{
     console.log("req:",req.body);
-    const tId = req.cookies.tId;
-    const pNo = req.body;
+    const tId = req.body.tId;
+    const pNo = req.body.pNo;
     const sql = "DELETE FROM `cartdetail` WHERE tId=? AND pNo=?"
     db.connection.query(sql, [tId, pNo], (error, data) =>{
         if(error){
@@ -121,12 +123,7 @@ async function getGenerateRId(){
 }
 
 router.post("/sendTrans", (req, res) =>{
-    if (req.cookies && req.cookies.rId) {
-        // 清除 rId cookie
-        res.clearCookie('rId', {
-            path: '/', // 確保清除的 path 與設置時一致
-        });
-    } 
+    
     const rId = generateRId();
     console.log(req.body);
     
@@ -161,8 +158,10 @@ router.post("/sendTrans", (req, res) =>{
 
 router.post("/sendRecord", (req, res) =>{
     console.log(req.body);
-    const records = req.body;
-    const rId = req.cookies.rId;
+    console.log(req.body.CartItem);
+    const records = req.body.CartItem;
+    const rId = req.body.rId;
+    const tId = req.body.tId;
     const values = records.map(record => [
         rId,                    // 使用 cookie 中的 rId
         record.pNo || null,     // 商品編號
@@ -180,7 +179,7 @@ router.post("/sendRecord", (req, res) =>{
         }
         else{
             const deletCart = "DELETE FROM `cartdetail` WHERE tId=?"
-            db.connection.query(deletCart, [req.cookies.tId], (error, data) =>{
+            db.connection.query(deletCart, [tId], (error, data) =>{
                 if(error){
                     console.log(error);
                     res.status(500).send(error);
@@ -194,8 +193,8 @@ router.post("/sendRecord", (req, res) =>{
     })
 })
 
-router.get("/viewTrans", (req, res) =>{
-    const rId = req.cookies.rId;
+router.post("/viewTrans", (req, res) =>{
+    const rId = req.body.rId;
     const sql = "SELECT * FROM `transaction` WHERE rId =?";
     db.connection.query(sql, [rId], (error, data) =>{
         if(error){
@@ -209,8 +208,8 @@ router.get("/viewTrans", (req, res) =>{
     })
 })
 
-router.get("/viewRecord", (req, res) =>{
-    const rId = req.cookies.rId;
+router.post("/viewRecord", (req, res) =>{
+    const rId = req.body.rId;
     const sql = "SELECT * FROM `record` WHERE rId =?";
     db.connection.query(sql, [rId], (error, data) =>{
         if(error){
